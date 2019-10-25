@@ -1,4 +1,6 @@
-*pyc
+*.pyc
 laba7.py
 laba8.py
 bot_api.txt
+*.log
+settings.py
