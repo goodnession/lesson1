@@ -6,6 +6,7 @@ from random import choice
 
 
 from emoji import emojize
+from telegram import ReplyKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
@@ -24,6 +25,7 @@ def main():
     dp.add_handler(CommandHandler('start', greet_user, pass_user_data = True))
     dp.add_handler(CommandHandler('planet', astrology))
     dp.add_handler(CommandHandler('rk', send_rk_pictures))
+#    dp.add_handler(CommandHandler('changeEmoji', change_emoji, pass_user_data = True))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me, pass_user_data = True))
     mybot.start_polling()
     mybot.idle()
@@ -35,12 +37,20 @@ def send_rk_pictures(bot, update):
     bot.send_photo(chat_id = update.message.chat_id, photo = open(rk_pic, 'rb'))
 
 
+#def change_emoji(user_data):
+#    if 'emoji' in user_data:
+#        del user_data['emoji']
+#    emoji = get_user_emoji(user_data)
+#    update.message.reply_text('Готово: {}'.format(emoji))
+
+
 def greet_user(bot, update, user_data):
     emoji = get_user_emoji(user_data)
     user_data['emoji'] = emoji
     greeting = ('Приветствую! {}'.format(emoji))
+    my_keyboard = ReplyKeyboardMarkup([ ['/rk'] ])
     logging.info(greeting)
-    update.message.reply_text(greeting)
+    update.message.reply_text(greeting, reply_markup = my_keyboard)
 
 
 def talk_to_me(bot, update, user_data):
