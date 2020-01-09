@@ -1,8 +1,14 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging
-import settings
-import ephem
 import datetime
+import ephem
+from glob import glob
+import logging
+from random import choice
+
+
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+
+import settings
 
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
@@ -15,10 +21,17 @@ def main():
     mybot = Updater(settings.API_KEY, request_kwargs=settings.REQUEST_KWARGS)
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler('start', greet_user))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     dp.add_handler(CommandHandler('planet', astrology))
+    dp.add_handler(CommandHandler('rk', send_rk_pictures))
+    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     mybot.start_polling()
     mybot.idle()
+
+
+def send_rk_pictures(bot, update):
+    rk_list = glob('NSFWPics/RK*.*')
+    rk_pic = choice(rk_list)
+    bot.send_photo(chat_id = update.message.chat_id, photo = open(rk_pic, 'rb'))
 
 
 def greet_user(bot, update):
